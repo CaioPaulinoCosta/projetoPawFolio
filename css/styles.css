@@ -10,10 +10,91 @@ header {
     background-color: #731702;
 }
 /* Navbar */
-#navbarNav a {
+#navbarSupportedContent {
+    padding-left: 20%;
+}
+
+#navbarSupportedContent a {
     color: #fff;
 }
 
-#navbarNav a:hover {
-    color: #FEAD11;
+.nav-item {
+    padding: 0 30px;
 }
+
+#navbarSupportedContent a:hover {
+    color: #F2C48D;
+}
+
+
+.btn-custom {
+    border-radius: 100px;
+    background-color: #F2C48D;
+    color: #2A2622;
+}
+
+.btn-custom:hover {
+    border-radius: 100px;
+    background-color: #be9b71;
+    color: #1b1916;
+}
+
+#btn-login {
+    font-size: 16px;
+    font-weight: 700;
+    width: 100px;
+    height: 40px;
+}
+
+#btn-register {
+    font-size: 16px;
+    font-weight: 700;
+    width: 150px;
+    height: 40px;
+}
+
+/* Responsividade */
+/*Extra Small devices (portrait phones, inferior que 576px)*/
+@media (max-width: 576.98px) {
+    #navbarSupportedContent {
+        padding: 0;
+    }
+    .nav-item {
+        padding: 0;
+    }
+  }
+  
+  /*Small devices (landscape phones)*/
+  @media (max-width: 576px) {
+    #navbarSupportedContent {
+        padding: 0;
+    }
+    .nav-item {
+        padding: 0;
+    }
+  }
+  
+  /*Medium devices (tablets, 768px e superior)*/
+  @media (max-width: 768px) {
+    #navbarSupportedContent {
+        padding: 0;
+    }
+    .nav-item {
+        padding: 0;
+    }
+  }
+  
+  /*Large devices (desktops, 992px e superior)*/
+  @media (max-width: 992px) {
+    #navbarSupportedContent {
+        padding: 0;
+    }
+    .nav-item {
+        padding: 0;
+    }
+}
+  
+  /*Extra Large devices (large desktops, 1200px e supeior)*/
+  @media (max-width: 1200px) {
+
+  }
