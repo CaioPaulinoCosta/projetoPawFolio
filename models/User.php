@@ -1,5 +1,4 @@
 <?php
-// Cria a classe User, possibilitando a utilização de orientação a objetos, separando os métodos que relacionam com o banco de dados com os métodos que não precisam. 
 
   class User {
 
@@ -45,5 +44,4 @@
     public function findByToken($token);
     public function destroyToken();
     public function changePassword(User $user);
-
   }

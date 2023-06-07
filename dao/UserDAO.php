@@ -17,48 +17,78 @@
 
     public function buildUser($data) {
 
-    $user = new User();
+      $user = new User();
 
-    $user->userId = $data["userId"];
-    $user->name = $data["name"];
-    $user->lastname = $data["lastname"];
-    $user->email = $data["email"];
-    $user->cpf = $data["cpf"];
-    $user->password = $data["password"];
-    $user-> image= $data["image"];
-    $user->adress = $data["adress"];
-    $user->birthday= $data["birthday"];
-    $user->token = $data["token"];
+      $user->userId = $data["userId"];
+      $user->name = $data["name"];
+      $user->lastname = $data["lastname"];
+      $user->email = $data["email"];
+      $user->cpf = $data["cpf"];
+      $user->password = $data["password"];
+      $user->image = $data["image"];
+      $user->adress = $data["adress"];
+      $user->birthday = $data["birthday"];
+      $user->token = $data["token"];
 
-    return $user;
+      return $user;
+
     }
+
     public function create(User $user, $authUser = false) {
 
-      $stmt = $this->conn->prepare("INSERT INTO users (
-        name, lastname, email, cpf, password, adress, birthday, token
-    ) VALUES (
-        :name, :lastname, :email, :cpf, :password, :adress, :birthday, :token
-    )");    
+      $stmt = $this->conn->prepare("INSERT INTO users(
+          name, lastname, email, cpf, password,adress, birthday, token
+        ) VALUES (
+          :name, :lastname, :email, :cpf, :password, :adress, :birthday, :token
+        )");
 
-    $stmt->bindParam("name", $user->name);
-    $stmt->bindParam("lastname", $user->lastname);
-    $stmt->bindParam("email", $user->email);
-    $stmt->bindParam("cpf", $user->cpf);
-    $stmt->bindParam("password", $user->password);
-    $stmt->bindParam("adress", $user->adress);
-    $stmt->bindParam("birthday", $user->birthday);
-    $stmt->bindParam("token", $user->token);
+      $stmt->bindParam(":name", $user->name);
+      $stmt->bindParam(":lastname", $user->lastname);
+      $stmt->bindParam(":email", $user->email);
+      $stmt->bindParam(":cpf", $user->cpf);
+      $stmt->bindParam(":password", $user->password);
+      $stmt->bindParam(":adress", $user->adress);
+      $stmt->bindParam(":birthday", $user->birthday);
+      $stmt->bindParam(":token", $user->token);
 
-    $stmt->execute();
+      $stmt->execute();
 
-    if($authUser) {
+      // Autenticar usuário, caso auth seja true
+      if($authUser) {
         $this->setTokenToSession($user->token);
       }
 
     }
+
     public function update(User $user, $redirect = true) {
 
+      $stmt = $this->conn->prepare("UPDATE users SET
+        name = :name,
+        lastname = :lastname,
+        email = :email,
+        image = :image,
+        token = :token
+        WHERE userId = :id
+      ");
+
+      $stmt->bindParam(":name", $user->name);
+      $stmt->bindParam(":lastname", $user->lastname);
+      $stmt->bindParam(":email", $user->email);
+      $stmt->bindParam(":image", $user->image);
+      $stmt->bindParam(":token", $user->token);
+      $stmt->bindParam(":id", $user->userId);
+
+      $stmt->execute();
+
+      if($redirect) {
+
+        // Redireciona para o perfil do usuario
+        $this->message->setMessage("Dados atualizados com sucesso!", "success", "editprofile.php");
+
+      }
+
     }
+
     public function verifyToken($protected = false) {
 
       if(!empty($_SESSION["token"])) {
@@ -85,19 +115,21 @@
       }
 
     }
+
     public function setTokenToSession($token, $redirect = true) {
 
-          // Salvar token na session
-          $_SESSION["token"] = $token;
+      // Salvar token na session
+      $_SESSION["token"] = $token;
 
-          if($redirect) {
-    
-            // Redireciona para o perfil do usuario
-            $this->message->setMessage("Seja bem-vindo!", "success", "index.php");
-    
-          }
+      if($redirect) {
+
+        // Redireciona para o perfil do usuario
+        $this->message->setMessage("Seja bem-vindo!", "success", "editprofile.php");
+
+      }
 
     }
+
     public function authenticateUser($email, $password) {
 
       $user = $this->findByEmail($email);
@@ -130,6 +162,7 @@
       }
 
     }
+
     public function findByEmail($email) {
 
       if($email != "") {
@@ -156,18 +189,88 @@
       }
 
     }
+
     public function findById($id) {
 
+      if($id != "") {
+
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE id = :id");
+
+        $stmt->bindParam(":id", $id);
+
+        $stmt->execute();
+
+        if($stmt->rowCount() > 0) {
+
+          $data = $stmt->fetch();
+          $user = $this->buildUser($data);
+          
+          return $user;
+
+        } else {
+          return false;
+        }
+
+      } else {
+        return false;
+      }
     }
+
     public function findByToken($token) {
 
+      if($token != "") {
+
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE token = :token");
+
+        $stmt->bindParam(":token", $token);
+
+        $stmt->execute();
+
+        if($stmt->rowCount() > 0) {
+
+          $data = $stmt->fetch();
+          $user = $this->buildUser($data);
+          
+          return $user;
+
+        } else {
+          return false;
+        }
+
+      } else {
+        return false;
+      }
+
     }
+
     public function destroyToken() {
 
+      // Remove o token da session
+      $_SESSION["token"] = "";
+
+      // Redirecionar e apresentar a mensagem de sucesso
+      $this->message->setMessage("Você fez o logout com sucesso!", "success", "index.php");
+
     }
+
     public function changePassword(User $user) {
 
-    }
-    
-}
+      $stmt = $this->conn->prepare("UPDATE users SET
+        password = :password
+        WHERE id = :id
+      ");
 
+      $stmt->bindParam(":password", $user->password);
+      $stmt->bindParam(":id", $user->userId);
+
+      $stmt->execute();
+
+      // Redirecionar e apresentar a mensagem de sucesso
+      $this->message->setMessage("Senha alterada com sucesso!", "success", "editprofile.php");
+
+    }
+    // ...
+  }
+
+
+  

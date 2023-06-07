@@ -1,5 +1,4 @@
 <?php
-/* Cria mensagens de aviso para o usuário. */
 
   class Message {
 
