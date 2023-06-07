@@ -1,6 +1,7 @@
 <?php
 
-    include_once("config/conect.php");
+    include_once("config/db.php");
+    include_once("config/globals.php");
 
 ?>
 
@@ -24,7 +25,7 @@
         <div class="container">
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
-              <a class="navbar-brand" href="index.html">
+              <a class="navbar-brand" href="index.php">
                 <img src="imgs/logopawfoliomenor.png" alt="PawFolio" width="70" height="70">
               </a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +44,7 @@
                   </li>
                 </ul>
                 <div> 
-                    <a href="">
+                    <a href="login.php">
                     <button class="btn btn-custom" id="btn-login">ENTRAR</button>
                     </a>
                     </div>
@@ -57,3 +58,8 @@
           </nav>
         </div>
     </header>
+    <?php if(!empty($flassMessage["msg"])): ?>
+    <div class="msg-container">
+      <p class="msg <?= $flassMessage["type"] ?>"><?= $flassMessage["msg"] ?></p>
+    </div>
+  <?php endif; ?>

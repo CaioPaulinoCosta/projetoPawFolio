@@ -5,11 +5,17 @@
 ?>
 
 <div class="container-fluid">
-<form class="w-25 p-5">
+<form class="w-25 p-5" action="<?= $BASE_URL ?>auth_process.php"  method="POST">
+<input type="hidden" name="type" value="register">
     <h2>Cadastre-se</h2>
   <div class="mb-3">
     <label class="form-label">Nome:</label>
     <input type="text" class="form-control" id="name" name="name">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Sobrenome:</label>
+    <input type="text" class="form-control" id="lastname" name="lastname">
   </div>
 
   <div class="mb-3">
@@ -44,7 +50,7 @@
     <input type="date" class="form-control" id="birthday" name="birthday">
   </div>
   <div class="d-grid gap-2">
-  <button type="submit" class="btn btn-primary">Cadastrar</button>
+  <input type="submit" class="btn btn-primary" value="Cadastrar">
   </div>
 </form>
 </div>
